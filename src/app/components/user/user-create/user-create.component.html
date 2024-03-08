@@ -1,0 +1,92 @@
+<mat-card class="shipping-card">
+    <mat-card-header>
+      <mat-card-title>Crear Usuario</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+  
+      <form [formGroup]="addressForm" novalidate (ngSubmit)="addUser()">
+        
+        <div class="row">
+          <mat-form-field class="full-width">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="firstName"  (keydown)="formValidator.onKeyDown($event)">
+            <mat-error *ngIf="addressForm.controls['firstName'].hasError('required')">
+              Nombre es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+  
+        <div class="row">
+          <mat-form-field class="full-width">
+            <mat-label>Apellido</mat-label>
+            <input matInput  formControlName="lastName" (keydown)="formValidator.onKeyDown($event)">
+            <mat-error *ngIf="addressForm.controls['lastName'].hasError('required')">
+              Apellido es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+  
+        <div class="row">
+          <mat-form-field class="full-width">
+            <mat-label>Direccion</mat-label>
+            <input matInput  formControlName="direccion" (keydown)="formValidator.allowAlphanumeric($event)">
+            <mat-error *ngIf="addressForm.controls['direccion'].hasError('required')">
+              Direccion es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+  
+        <div class="row">
+          <mat-form-field class="full-width">
+            <mat-label>Teléfono </mat-label>
+            <input matInput  formControlName="telefono" (keydown)="formValidator.onlyNumbers($event)">
+            <mat-error *ngIf="addressForm.controls['telefono'].hasError('required')">
+              Teléfono es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+  
+        <div class="row">
+          <mat-form-field class="full-width">
+            <mat-label>Correo electrónico</mat-label>
+            <input matInput formControlName="email">
+            <mat-error *ngIf="addressForm.controls['email'].hasError('required')">
+              Correo electrónico es <strong>requerido</strong>
+            </mat-error>
+            <mat-error *ngIf="addressForm.controls['email'].hasError('email')">
+              Correo electrónico es <strong>inválido</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+  
+  
+       <!--  <div class="row">
+          <mat-form-field class="full-width">
+            <mat-label>password</mat-label>
+            <input matInput placeholder="password" formControlName="password">
+            <mat-error *ngIf="addressForm.controls['password'].hasError('required')">
+              password es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+        </div> -->
+  
+        <div class="row">
+          <mat-form-field class="full-width">
+            <mat-label>Rol</mat-label>
+            <mat-select formControlName="role">
+              <mat-option value="admin">Admin</mat-option>
+              <mat-option value="Usuario">Usuario</mat-option>
+            </mat-select>
+            <mat-error *ngIf="addressForm.controls['role'].hasError('required')">
+              El rol es <strong>requerido</strong>.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        
+        <mat-card-actions>
+          <button  mat-raised-button color="accent" type="submit">Guardar</button>
+        </mat-card-actions>
+      </form>
+    </mat-card-content>
+  
+  </mat-card>

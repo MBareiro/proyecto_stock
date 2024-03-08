@@ -1,0 +1,55 @@
+<div class="container mt-4">
+    <mat-card>
+        <mat-card-header class="bg-dark text-white">
+            <mat-card-title>Ingresos</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <!-- Primer conjunto de campos -->
+            <div class="field-group">
+                <mat-form-field class="field">
+                    <mat-label>Productos</mat-label>
+                    <mat-select [(value)]="selectedProduct" (selectionChange)="Producto()">
+                        <mat-option value="-">-</mat-option>
+                        <mat-option *ngFor="let producto of productos" [value]="producto.id">
+                            {{ producto.nombre }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="field">
+                    <mat-label>Cantidad</mat-label>
+                    <input matInput type="number" id="cantidad" placeholder="" aria-label="Cantidad"
+                        [disabled]="!isProductoSeleccionado" [(ngModel)]="cantidadInput" (keyup)="CantidadValidacion()"
+                        (change)="CantidadValidacion()">
+                </mat-form-field>
+
+                <button mat-raised-button color="primary" (click)="agregarProducto()">Agregar Producto</button>
+            </div>
+
+            <mat-list>
+                <mat-list-item *ngFor="let item of dataSource">
+                    <mat-icon matListItemIcon>note</mat-icon>
+                    <div matListItemTitle>{{ item.nombre }}</div>
+                    <div matListItemLine>Cantidad: {{ item.cantidad }}</div>
+                    <!-- <p matLine>Reserva: {{ item.reserva }}</p> -->
+                    <div matListItemMeta>
+                        <button mat-icon-button color="warn" (click)="eliminarRegistro(item.position)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </mat-list-item>
+            </mat-list>
+
+        </mat-card-content>
+        <mat-card-actions class="container">
+            <div class="example-button-row">
+                <button mat-mini-fab color="primary" matTooltip="Limpiar tabla" (click)="limpiarTabla()">
+                    <mat-icon>cleaning_services</mat-icon>
+                </button>
+                <button mat-mini-fab color="primary" matTooltip="Guardar" (click)="guardar()">
+                    <mat-icon>save</mat-icon>
+                </button>
+            </div>
+        </mat-card-actions>
+    </mat-card>
+</div>

@@ -1,0 +1,31 @@
+.example-button-row {
+  display: table-cell;
+  max-width: 600px;
+}
+
+.example-button-row .mat-mdc-button-base {
+  margin: 8px 8px 8px 0;
+}
+
+.mat-list-item .mat-line {
+  display: flex;
+  align-items: center;
+}
+
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+/* .example-full-width {
+  width: 100%;
+} */
+
+td {
+  padding-right: 8px;
+}
+
+.field {
+  padding-right: 8px;
+}

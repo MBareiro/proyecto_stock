@@ -1,0 +1,46 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 200px;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* styles.css */
+.vertical-align-middle {
+  vertical-align: middle;
+}
+
+.icon-with-margin {
+  margin-right: 8px; /* Puedes ajustar el valor según tus necesidades */
+}
+
+.a{
+  margin-left: 8px;
+}
+
+.mat-toolbar {
+  display: flex;
+  justify-content: space-between; /* Alinear elementos en ambos extremos */
+  align-items: center; /* Centrar elementos verticalmente */
+}
+
+.toolbar-title {
+  overflow: hidden;
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
