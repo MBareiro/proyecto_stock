@@ -327,32 +327,53 @@ export class SalidasComponent {
   agregarProducto() {
     // Verifica si hay un producto seleccionado y una cantidad ingresada
     if (this.selectedProduct && this.cantidadInput !== null) {
+      const productoExistente = this.dataSource.find(
+        (item) => item.cod_product === this.selectedProduct
+      );
+  
+      // Verifica si el producto ya está en la lista
+      if (productoExistente) {
+        // Muestra un mensaje de error indicando que el producto ya está en la lista
+        this.mostrarSnackbar('Este producto ya está en la lista.', [
+          'error-snackbar'
+        ]);
+        return; // Sale del método sin agregar el producto a la lista
+      }
       // Busca el producto seleccionado en la lista de productos
       const productoSeleccionado = this.productos.find(
         (producto) => producto.id === parseInt(this.selectedProduct, 10)
       );
-
+        
       // Verifica si se encontró el producto seleccionado
       if (productoSeleccionado) {
-        // Crea un nuevo elemento para la lista con el nombre del producto y la cantidad ingresada
-        const nuevoElemento: PeriodicElement = {
-          position: this.dataSource.length + 1,
-          cod_product: productoSeleccionado.id,
-          nombre: productoSeleccionado.nombre,
-          cantidad: this.cantidadInput,
-          reserva: productoSeleccionado.reserva,
-        };
-
-        // Agrega el nuevo elemento a la lista
-        this.dataSource.push(nuevoElemento);
-
-        // Limpia los campos después de agregar el producto a la lista
-        this.limpiarCampos();
-
-        // Muestra un mensaje de éxito
-        this.mostrarSnackbar('Producto agregado a la lista.', [
-          'success-snackbar',
-        ]);
+        // Verifica si hay suficiente stock disponible
+        if (this.cantidadInput <= parseInt(productoSeleccionado.cantidad, 10)) {
+          // Crea un nuevo elemento para la lista con el nombre del producto y la cantidad ingresada
+          const nuevoElemento: PeriodicElement = {
+            position: this.dataSource.length + 1,
+            cod_product: productoSeleccionado.id,
+            nombre: productoSeleccionado.nombre,
+            cantidad: this.cantidadInput,
+            reserva: productoSeleccionado.reserva,
+          };
+  
+          // Agrega el nuevo elemento a la lista
+          this.dataSource.push(nuevoElemento);
+  
+          // Limpia los campos después de agregar el producto a la lista
+          this.limpiarCampos();
+  
+          // Muestra un mensaje de éxito
+          this.mostrarSnackbar('Producto agregado a la lista.', [
+            'success-snackbar',
+          ]);
+        } else {
+          // Muestra un mensaje de error si no hay suficiente stock disponible
+          this.mostrarSnackbar(
+            'No hay suficiente stock disponible para este producto. Disponible: ' + productoSeleccionado.cantidad + ' ',
+            ['error-snackbar']
+          );
+        }
       }
     } else {
       // Muestra un mensaje de error si no se ha seleccionado un producto o no se ha ingresado una cantidad
@@ -362,4 +383,11 @@ export class SalidasComponent {
       );
     }
   }
+  // Método para validar el evento change del input de cantidad
+validarCantidad() {
+  // Verifica si el valor ingresado es negativo y lo establece como cero si es así
+  if (this.cantidadInput !== null && this.cantidadInput < 0) {
+    this.cantidadInput = 0;
+  }
+}
 }

@@ -5,6 +5,8 @@ import { Categoria } from 'src/app/models/category';
 import { Product } from 'src/app/models/product';
 import { CategoriaService } from 'src/app/services/categoria.service';
 import { ProductService } from 'src/app/services/product.service';
+import { DeleteCategoryDialogComponent } from '../dialogs/delete-category-dialog/delete-category-dialog.component';
+import { DeleteProductDialogComponent } from '../dialogs/delete-product-dialog/delete-product-dialog.component';
 import { EditCategoryDialogComponent } from '../dialogs/edit-category-dialog/edit-category-dialog.component';
 import { EditProductDialogComponent } from '../dialogs/edit-product-dialog/edit-product-dialog.component';
 import { NewFolderComponent } from '../dialogs/new-folder/new-folder.component';
@@ -17,8 +19,10 @@ import { NewProductComponent } from '../dialogs/new-product/new-product.componen
 })
 export class InventoryComponent implements OnInit {
   products: Product[] = [];
+  filteredProducts: Product[] = [];
   categories: Categoria[] = [];
-  selectedCategoryId: number | null = null; // Variable para almacenar el ID de la categoría seleccionada
+  selectedCategoryId: number | null = null;
+  searchText: string = ''; // Variable para almacenar el texto de búsqueda
 
   constructor(
     private productService: ProductService,
@@ -30,15 +34,31 @@ export class InventoryComponent implements OnInit {
   ngOnInit(): void {
     this.loadProducts();
     this.loadCategories();
+    this.checkProductsInReserve();
   }
 
+  checkProductsInReserve(): void {    
+    this.productService.getProducts().subscribe(
+      (response: Product[]) => {  
+        const productsInReserve = response.filter(product => +product.cantidad <= +product.reserva);
+        if (productsInReserve.length > 0) {
+          this.snackBar.open('¡Hay productos en reserva!', 'Cerrar', {
+            duration: 5000
+          });
+        }  
+      },
+      (error) => {
+        console.error('Error fetching products:', error);
+      }
+    );
+    
+  }
   loadProducts(): void {
-    // Carga todos los productos si no hay una categoría seleccionada
     if (this.selectedCategoryId === null) {      
       this.productService.getProducts().subscribe(
         (response: Product[]) => {  
-          this.products = response.filter(product => product.id_categoria === 0);             
-          /* this.products = response;  */
+          this.products = response.filter(product => product.id_categoria === 0);
+          this.filteredProducts = this.products; // Inicializa la lista de productos filtrados
           this.loadCategories();   
         },
         (error) => {
@@ -46,10 +66,10 @@ export class InventoryComponent implements OnInit {
         }
       );
     } else {
-      // Carga los productos de la categoría seleccionada
       this.productService.getProductsByCategory(this.selectedCategoryId).subscribe(
         (response: Product[]) => {
           this.products = response;
+          this.filteredProducts = this.products; // Inicializa la lista de productos filtrados
         },
         (error) => {
           console.error('Error fetching products:', error);
@@ -58,7 +78,6 @@ export class InventoryComponent implements OnInit {
     }
   }
 
-  
   loadCategories(): void {
     this.categoryService.getCategorias().subscribe(
       (response: Categoria[]) => {     
@@ -73,7 +92,7 @@ export class InventoryComponent implements OnInit {
   openNewProductDialog(): void {
     const dialogRef = this.dialog.open(NewProductComponent, {
       width: '260px',
-      data: {} // Ajusta los datos si es necesario
+      data: {}
     });
 
     dialogRef.afterClosed().subscribe((nuevoProducto) => {
@@ -97,7 +116,7 @@ export class InventoryComponent implements OnInit {
   openNewFolderDialog(): void {
     const dialogRef = this.dialog.open(NewFolderComponent, {
       width: '260px',
-      data: {} // Ajusta los datos si es necesario
+      data: {}
     });
 
     dialogRef.afterClosed().subscribe((nuevoFolder) => {
@@ -115,21 +134,20 @@ export class InventoryComponent implements OnInit {
     });
   }
 
-  // Método para cargar los productos de una categoría seleccionada
   loadProductsByCategory(categoryId: number): void {
-    this.selectedCategoryId = categoryId; // Actualiza el ID de la categoría seleccionada
-    this.loadProducts(); // Vuelve a cargar los productos
+    this.selectedCategoryId = categoryId;
+    this.loadProducts();
   }
 
   goBack(): void {
-    this.selectedCategoryId = null
+    this.selectedCategoryId = null;
     this.loadProducts();
   }
 
   editProduct(product: Product): void {
     const dialogRef = this.dialog.open(EditProductDialogComponent, {
       width: '260px',
-      data: {...product} // Ajusta los datos si es necesario
+      data: {...product}
     });
 
     dialogRef.afterClosed().subscribe((result: Product | undefined) => {
@@ -148,15 +166,13 @@ export class InventoryComponent implements OnInit {
         );
       }
     });
-    // Aquí puedes abrir un diálogo de edición de producto o redirigir a una página de edición
-    console.log('Editar producto:', product);
   }
 
   editCategory(event: MouseEvent, categoria: Categoria): void {
-    event.stopPropagation(); // Detiene la propagación del evento
+    event.stopPropagation();
     const dialogRef = this.dialog.open(EditCategoryDialogComponent, {
       width: '260px',
-      data: {...categoria} // Ajusta los datos si es necesario
+      data: {...categoria}
     });
   
     dialogRef.afterClosed().subscribe((result: Categoria | undefined) => {
@@ -175,8 +191,70 @@ export class InventoryComponent implements OnInit {
         );
       }
     });
-    console.log('Editar categoría:', categoria);
   }
+
+  deleteCategory(event: MouseEvent, categoria: Categoria): void {
+    event.stopPropagation();
+    const dialogRef = this.dialog.open(DeleteCategoryDialogComponent, {
+      width: '260px',
+      data: {...categoria}
+    });
   
+    dialogRef.afterClosed().subscribe((confirmacion: boolean) => {
+      console.log(confirmacion);
+      
+      if (confirmacion) {
+        this.categoryService.eliminarCategoria(categoria.id).subscribe(
+          (resultado) => {
+            console.log('Categoria eliminada.', resultado);
+            this.snackBar.open('Categoria eliminada correctamente', 'Cerrar', {
+              duration: 3000
+            });
+            this.loadCategories();
+          },
+          (error) => {
+            console.error('Error al eliminar la categoría', error);
+          }
+        );
+      }
+    });
+  }
+
+  deleteProduct(event: MouseEvent, product: Product): void {
+    event.stopPropagation();
+    const dialogRef = this.dialog.open(DeleteProductDialogComponent, {
+      width: '260px',
+      data: {}
+    });
   
+    dialogRef.afterClosed().subscribe((confirmacion: boolean) => {      
+      if (confirmacion) {
+        this.productService.deleteProduct(product.id).subscribe(
+          (resultado) => {
+            console.log('Producto eliminada.', resultado);
+            this.snackBar.open('Producto eliminado correctamente', 'Cerrar', {
+              duration: 3000
+            });
+            this.loadProducts();
+          },
+          (error) => {
+            console.error('Error al eliminar la producto', error);
+          }
+        );
+      }
+    });
+  }
+
+  // Método para filtrar productos por nombre
+  filterProducts(): void {
+    if (this.searchText.trim() === '') {
+      // Si el campo de búsqueda está vacío, mostrar todos los productos
+      this.filteredProducts = this.products;
+    } else {
+      // Filtrar productos por nombre
+      this.filteredProducts = this.products.filter(product =>
+        product.nombre.toLowerCase().includes(this.searchText.toLowerCase())
+      );
+    }
+  }
 }

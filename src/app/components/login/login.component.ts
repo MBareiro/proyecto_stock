@@ -41,7 +41,7 @@ export class LoginComponent {
 
           // Redirigir a la página principal o a la página deseada después del inicio de sesión
           // Puedes personalizar esto según tu aplicación
-          this.router.navigate(['/navigation']);
+          this.router.navigate(['/navigation/inventory']);
         } else {
           // Manejar el caso en el que las credenciales son incorrectas
           this.snackBar.open('Credenciales incorrectas', 'Cerrar', {
@@ -49,9 +49,7 @@ export class LoginComponent {
           });
         }
       },
-      (error) => {
-        const errorMessage = error['error'];
-        
+      (error) => {        
         this.snackBar.open('Credenciales incorrectas', 'Cerrar', {
           duration: 4000
         });      

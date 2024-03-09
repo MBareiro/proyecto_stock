@@ -45,28 +45,18 @@ export class ChangePasswordComponent {
         )
         .subscribe(
           (data) => {
-            //console.log('Password changed successfully:', data);
-            /* Swal.fire({
-              icon: 'success',
-              color: 'white',
-              text: 'Exito!',
-              background: '#191c24',
-              timer: 1500,
-            }) */
-            this.snackBar.open('Contraseña actualizada correctamente: ', 'Cerrar', {
+            //console.log('Password changed successfully:', data);            
+            this.snackBar.open('Contraseña actualizada correctamente.', 'Cerrar', {
               duration: 4000
             });
             this.passwordForm.reset()
           },
           (error) => {
-            console.error('Error changing password:', error);
-            /* Swal.fire({
-              icon: 'error',
-              color: 'white',
-              text: 'Contraseña antigua incorrecta',
-              background: '#191c24',
-            }) */
+            console.error('Error changing password:', error);            
             // Mostrar un mensaje de error al usuario
+            this.snackBar.open('Contraseña antigua incorrecta.', 'Cerrar', {
+              duration: 4000
+            });
           }
         );
     } else {
@@ -75,17 +65,12 @@ export class ChangePasswordComponent {
   }  
   
   onSubmit() {
-    if (this.passwordForm.value.newPassword !== this.passwordForm.value.confirmPassword) {
-      /* Swal.fire({
-        icon: 'warning',
-        color: 'white',
-        text: 'Las contraseñas no coinciden',
-        background: '#191c24'
-      }) */
+    if (this.passwordForm.value.newPassword !== this.passwordForm.value.confirmPassword) {      
       // Mostrar un mensaje de error al usuario
+      this.snackBar.open('La contraseña nueva y su confirmacion no coinciden.', 'Cerrar', {
+        duration: 4000
+      });
     } else {
-      // Implementa aquí las validaciones de complejidad de contraseña si es necesario
-
       // Llama a la función para cambiar la contraseña
       this.changePassword();
     }

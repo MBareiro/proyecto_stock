@@ -1,14 +1,5 @@
 <mat-card>
   <mat-card-actions>
-    <!-- <button mat-raised-button color="primary" (click)="openNewProductDialog()">
-      Crear Nuevo Producto
-    </button> -->
-
-    <!-- <button mat-raised-button color="primary" (click)="openNewFolderDialog()">
-      Crear Carpeta
-    </button> -->
-
-
     <div class="example-button-row">
       <button mat-mini-fab color="primary" matTooltip="Crear Carpeta" (click)="openNewFolderDialog()">
         <mat-icon>folder</mat-icon>
@@ -19,6 +10,11 @@
       <button mat-mini-fab color="primary" matTooltip="Volver atras" (click)="goBack()" *ngIf="selectedCategoryId">
         <mat-icon>arrow_back</mat-icon>
       </button>
+      <!-- Campo de búsqueda por nombre -->
+      <mat-form-field class="example-full-width" *ngIf="selectedCategoryId">
+        <mat-label>Productos</mat-label>
+        <input matInput placeholder="Buscar por nombre" [(ngModel)]="searchText"  (keyup)="filterProducts()">
+      </mat-form-field>
     </div>
   </mat-card-actions>
 
@@ -29,25 +25,30 @@
       <div matListItemTitle>{{categoria.nombre}}</div>
       <div matListItemMeta>
         <button mat-icon-button color="primary" (click)="editCategory($event, categoria)">
-        <mat-icon>edit</mat-icon>
-      </button>
-      
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" (click)="deleteCategory($event, categoria)">
+          <mat-icon>delete</mat-icon>
+        </button>
       </div>
     </mat-list-item>
   </mat-list>
-
-
-  <!-- <button mat-button color="primary" *ngIf="selectedCategoryId" (click)="goBack()">
-      <mat-icon>arrow_back</mat-icon>
-    </button> -->
-  <mat-list>
-    <!-- <div mat-subheader>Listado de Productos</div> -->
-    <mat-list-item *ngFor="let product of products">
+  
+  <!-- Lista de productos -->
+  <mat-list>   
+    <!-- Listado de productos filtrados -->
+    <mat-list-item *ngFor="let product of filteredProducts" [ngClass]="{'orange-text': +product.reserva >= +product.cantidad}">
       <mat-icon matListItemIcon>note</mat-icon>
       <div matListItemTitle>{{product.nombre}}</div>
-      <div matListItemLine>{{product.cantidad}}</div>
-      <div matListItemMeta><button mat-icon-button color="primary" (click)="editProduct(product)">
+      <div matListItemLine >
+        Cantidad: {{product.cantidad}} Reserva: {{product.reserva}}
+      </div>
+      <div matListItemMeta>
+        <button mat-icon-button color="primary" (click)="editProduct(product)">
           <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" (click)="deleteProduct($event, product)">
+          <mat-icon>delete</mat-icon>
         </button>
       </div>
     </mat-list-item>

@@ -13,12 +13,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { ReactiveFormsModule } from '@angular/forms'; 
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { ForgotPasswordComponent } from './components/account/forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from './components/account/reset-password/reset-password.component'; 
+import { ResetPasswordComponent } from './components/account/reset-password/reset-password.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { UserCreateComponent } from './components/user/user-create/user-create.component';
 import { UserListComponent } from './components/user/user-list/user-list.component';
@@ -28,15 +28,17 @@ import { ChangePasswordComponent } from './components/account/change-password/ch
 import { InventoryComponent } from './components/inventory/inventory.component';
 import { NewProductComponent } from './components/dialogs/new-product/new-product.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import {MatTreeModule} from '@angular/material/tree';
-import {MatDividerModule} from '@angular/material/divider';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatDividerModule } from '@angular/material/divider';
 import { NewFolderComponent } from './components/dialogs/new-folder/new-folder.component';
 import { EditProductDialogComponent } from './components/dialogs/edit-product-dialog/edit-product-dialog.component';
 import { EditCategoryDialogComponent } from './components/dialogs/edit-category-dialog/edit-category-dialog.component';
 import { IngresosComponent } from './components/ingresos/ingresos.component';
 import { SalidasComponent } from './components/salidas/salidas.component';
 import { MatTableModule } from '@angular/material/table';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { DeleteCategoryDialogComponent } from './components/dialogs/delete-category-dialog/delete-category-dialog.component';
+import { DeleteProductDialogComponent } from './components/dialogs/delete-product-dialog/delete-product-dialog.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -54,6 +56,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     EditCategoryDialogComponent,
     IngresosComponent,
     SalidasComponent,
+    DeleteCategoryDialogComponent,
+    DeleteProductDialogComponent,
   ],
   imports: [
     BrowserModule,

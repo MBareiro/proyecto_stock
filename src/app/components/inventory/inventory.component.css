@@ -8,11 +8,14 @@
   }
   
   .example-button-row .mat-mdc-button-base {
-    margin: 8px 8px 8px 0;
+    margin: 16px 8px 8px 8px;
   }
 
   .mat-list-item .mat-line {
     display: flex;
     align-items: center;
+  }
+  .orange-text {
+    background-color: orange;
   }
   

@@ -11,7 +11,7 @@
                     <mat-select [(value)]="selectedProduct" (selectionChange)="Producto()">
                         <mat-option value="-">-</mat-option>
                         <mat-option *ngFor="let producto of productos" [value]="producto.id">
-                            {{ producto.nombre }}
+                            {{ producto.nombre }} 
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -20,8 +20,9 @@
                     <mat-label>Cantidad</mat-label>
                     <input matInput type="number" id="cantidad" placeholder="" aria-label="Cantidad"
                         [disabled]="!isProductoSeleccionado" [(ngModel)]="cantidadInput"
-                        (keyup)="CantidadValidacion()" (change)="CantidadValidacion()">
+                        (keyup)="CantidadValidacion()" (change)="validarCantidad()">
                 </mat-form-field>
+                
 
                 <button mat-raised-button color="primary" class="action-button ml-2"  (click)="agregarProducto()">Agregar Producto</button>
             </div>

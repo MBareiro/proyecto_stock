@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>Borrar</h2>
+<mat-dialog-content>
+  ¿Está seguro de eliminar esta carpeta?
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="guardarCambios(false)">No</button>
+  <button mat-button (click)="guardarCambios(true)" cdkFocusInitial>Sí</button>
+</mat-dialog-actions>

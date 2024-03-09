@@ -346,6 +346,19 @@ export class IngresosComponent {
   agregarProducto() {
     // Verifica si hay un producto seleccionado y una cantidad ingresada
     if (this.selectedProduct && this.cantidadInput !== null) {
+      const productoExistente = this.dataSource.find(
+        (item) => item.cod_product === this.selectedProduct
+      );
+  
+      // Verifica si el producto ya está en la lista
+      if (productoExistente) {
+        // Muestra un mensaje de error indicando que el producto ya está en la lista
+        this.mostrarSnackbar('Este producto ya está en la lista.', [
+          'error-snackbar'
+        ]);
+        return; // Sale del método sin agregar el producto a la lista
+      }
+      
       // Busca el producto seleccionado en la lista de productos
       const productoSeleccionado = this.productos.find(
         (producto) => producto.id === parseInt(this.selectedProduct, 10)
