@@ -21,13 +21,13 @@ export class NewProductComponent {
     private categoriaService: CategoriaService // Ajusta el servicio según tu estructura
   ) {
     this.productoForm = this.formBuilder.group({
-      nombre: ['', Validators.required],
-      cantidad: ['', Validators.required],
-      reserva: ['', Validators.required],
-      precio_compra: ['', Validators.required],/* 
-      precio_venta: ['', Validators.required], */
-      medida: ['', Validators.required],
-      id_categoria: ['', Validators.required],
+      nombre: ['', Validators.required],/* 
+      cantidad: ['', ],
+      reserva: ['', ],
+      precio_compra: ['', ], *//* 
+      precio_venta: ['', ], *//* 
+      medida: ['', ],*/
+      id_categoria: ['', ], 
     });
   }
 
@@ -38,9 +38,7 @@ export class NewProductComponent {
   cargarCategorias() {
     this.categoriaService.getCategorias().subscribe(
       (categorias) => {
-        this.categorias = categorias;
-        console.log(this.categorias);
-        
+        this.categorias = categorias;        
       },
       (error) => {
         console.error('Error al obtener las categorías', error);
@@ -49,11 +47,16 @@ export class NewProductComponent {
   }
 
   guardarNuevoProducto() {
-    const nuevoProducto = this.productoForm.value;
-    nuevoProducto.cantidad = parseInt(nuevoProducto.cantidad);
-
-    // Puedes realizar acciones adicionales antes de cerrar el diálogo si es necesario
-    this.dialogRef.close(nuevoProducto);
+    if(this.productoForm.valid){
+      const nuevoProducto = this.productoForm.value;
+      nuevoProducto.cantidad = parseInt(nuevoProducto.cantidad);
+  
+      // Puedes realizar acciones adicionales antes de cerrar el diálogo si es necesario
+      this.dialogRef.close(nuevoProducto);
+    } else {
+      return
+    }
+    
   }
 
   cerrarDialog() {

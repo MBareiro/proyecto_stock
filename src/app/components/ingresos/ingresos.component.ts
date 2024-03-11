@@ -1,4 +1,5 @@
 import { Component, Renderer2 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import {
   MatSnackBar,
   MatSnackBarConfig,
@@ -7,6 +8,7 @@ import { EntradaService } from 'src/app/services/entrada.service';
 import { ProveedorService } from 'src/app/services/proveedor.service'; */
 import { IngresoService } from 'src/app/services/ingreso.service';
 import { ProductService } from '../../services/product.service';
+import { NewProductComponent } from '../dialogs/new-product/new-product.component';
 
 export interface PeriodicElement {
   position: number;
@@ -49,8 +51,10 @@ export class IngresosComponent {
     private productoService: ProductService,
     private ingresosService: IngresoService,
     private renderer: Renderer2,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
+    private productService: ProductService
+  ) { }
 
   ngOnInit(): void {
     // Inicializa la tabla con 10 filas vacías
@@ -62,6 +66,10 @@ export class IngresosComponent {
     this.precioCompraInput = null;
     this.precioVentaInput = null;
 
+    this.loadProducts()
+  }
+
+  loadProducts(): void {
     // Carga la lista de productos
     this.productoService.getProducts().subscribe(
       (productos) => {
@@ -72,7 +80,6 @@ export class IngresosComponent {
       }
     );
   }
-
   Producto() {
     // Verifica si la opción seleccionada no es la deshabilitada
     if (this.selectedProduct && this.selectedProduct !== '-') {
@@ -128,6 +135,14 @@ export class IngresosComponent {
           ['error-snackbar']
         );
       }
+    }
+  }
+
+  // Método para validar el evento change del input de cantidad
+  validarCantidad() {
+    // Verifica si el valor ingresado es negativo y lo establece como cero si es así
+    if (this.cantidadInput !== null && this.cantidadInput < 0) {
+      this.cantidadInput = 0;
     }
   }
 
@@ -349,7 +364,7 @@ export class IngresosComponent {
       const productoExistente = this.dataSource.find(
         (item) => item.cod_product === this.selectedProduct
       );
-  
+
       // Verifica si el producto ya está en la lista
       if (productoExistente) {
         // Muestra un mensaje de error indicando que el producto ya está en la lista
@@ -358,7 +373,7 @@ export class IngresosComponent {
         ]);
         return; // Sale del método sin agregar el producto a la lista
       }
-      
+
       // Busca el producto seleccionado en la lista de productos
       const productoSeleccionado = this.productos.find(
         (producto) => producto.id === parseInt(this.selectedProduct, 10)
@@ -394,4 +409,33 @@ export class IngresosComponent {
       );
     }
   }
+
+  openNewProductDialog(event: Event): void {
+    event.stopPropagation();
+    const dialogRef = this.dialog.open(NewProductComponent, {
+      width: '260px',
+      data: {}
+    });
+  
+    dialogRef.afterClosed().subscribe((nuevoProducto) => {
+      if (nuevoProducto) {
+        this.productService.createProduct(nuevoProducto).subscribe(
+          (resultado) => {
+            console.log('Producto agregado correctamente', resultado);
+            this.snackBar.open('Producto agregado correctamente', 'Cerrar', {
+              duration: 3000
+            });
+            // Vuelve a cargar la lista de productos actualizada
+            this.loadProducts();
+            // Establece el nuevo producto creado como seleccionado en el mat-select
+            this.selectedProduct = resultado.id; // Suponiendo que el ID del producto es devuelto en la respuesta
+          },
+          (error) => {
+            console.error('Error al agregar el producto', error);
+          }
+        );
+      }
+    });
+  }
+  
 }

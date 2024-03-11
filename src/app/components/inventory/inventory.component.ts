@@ -40,7 +40,7 @@ export class InventoryComponent implements OnInit {
   checkProductsInReserve(): void {    
     this.productService.getProducts().subscribe(
       (response: Product[]) => {  
-        const productsInReserve = response.filter(product => +product.cantidad <= +product.reserva);
+        const productsInReserve = response.filter(product => +product.cantidad <= +product.reserva && +product.reserva !== 0);
         if (productsInReserve.length > 0) {
           this.snackBar.open('¡Hay productos en reserva!', 'Cerrar', {
             duration: 5000
@@ -57,8 +57,12 @@ export class InventoryComponent implements OnInit {
     if (this.selectedCategoryId === null) {      
       this.productService.getProducts().subscribe(
         (response: Product[]) => {  
+          console.log(response);
+          
           this.products = response.filter(product => product.id_categoria === 0);
           this.filteredProducts = this.products; // Inicializa la lista de productos filtrados
+          console.log(this.products);
+          
           this.loadCategories();   
         },
         (error) => {

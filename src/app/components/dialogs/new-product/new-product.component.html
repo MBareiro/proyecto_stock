@@ -5,14 +5,19 @@
 
     <form [formGroup]="productoForm">
         <mat-form-field>
+            <mat-label>Nombre</mat-label>
             <input matInput placeholder="Nombre" formControlName="nombre">
-        </mat-form-field>
+            <mat-error *ngIf="productoForm.controls['nombre'].hasError('required')">Este campo es
+                <strong>requerido</strong>
+            </mat-error>
+        </mat-form-field><!-- 
         <mat-form-field>
             <input matInput placeholder="Cantidad" formControlName="cantidad">
         </mat-form-field>
         <mat-form-field>
             <input matInput placeholder="Cantidad en reserva" formControlName="reserva">
-        </mat-form-field>
+        </mat-form-field> -->
+
         <!-- <mat-form-field>
             <input matInput placeholder="Precio compra" formControlName="precio_compra">
         </mat-form-field> --><!-- 
@@ -22,6 +27,7 @@
         <!-- <mat-form-field>
             <input matInput placeholder="Medida" formControlName="medida">
         </mat-form-field> -->
+        
         <mat-form-field>
             <mat-label>Categoría</mat-label>
             <mat-select formControlName="id_categoria">
@@ -29,6 +35,7 @@
                     {{ categoria.nombre }}
                 </mat-option>
             </mat-select>
+            <mat-hint>(Opcional)</mat-hint>
         </mat-form-field>
         
     </form>

@@ -14,13 +14,16 @@
                             {{ producto.nombre }}
                         </mat-option>
                     </mat-select>
+                    <button mat-icon-button matSuffix color="primary" matTooltip="Crear producto" (click)="openNewProductDialog($event)">
+                        <mat-icon>add</mat-icon>
+                    </button>
                 </mat-form-field>
 
                 <mat-form-field class="field">
                     <mat-label>Cantidad</mat-label>
                     <input matInput type="number" id="cantidad" placeholder="" aria-label="Cantidad"
                         [disabled]="!isProductoSeleccionado" [(ngModel)]="cantidadInput" (keyup)="CantidadValidacion()"
-                        (change)="CantidadValidacion()">
+                        (change)="validarCantidad()">
                 </mat-form-field>
 
                 <button mat-raised-button color="primary" (click)="agregarProducto()">Agregar Producto</button>

@@ -1,7 +1,7 @@
 <mat-card>
   <mat-card-actions>
     <div class="example-button-row">
-      <button mat-mini-fab color="primary" matTooltip="Crear Carpeta" (click)="openNewFolderDialog()">
+      <button mat-mini-fab color="primary" matTooltip="Crear Carpeta" (click)="openNewFolderDialog()" *ngIf="!selectedCategoryId">
         <mat-icon>folder</mat-icon>
       </button>
       <button mat-mini-fab color="primary" matTooltip="Crear Producto" (click)="openNewProductDialog()">
@@ -37,7 +37,7 @@
   <!-- Lista de productos -->
   <mat-list>   
     <!-- Listado de productos filtrados -->
-    <mat-list-item *ngFor="let product of filteredProducts" [ngClass]="{'orange-text': +product.reserva >= +product.cantidad}">
+    <mat-list-item *ngFor="let product of filteredProducts" [ngClass]="{'orange-text': +product.reserva >= +product.cantidad && +product.reserva !== 0}">
       <mat-icon matListItemIcon>note</mat-icon>
       <div matListItemTitle>{{product.nombre}}</div>
       <div matListItemLine >
