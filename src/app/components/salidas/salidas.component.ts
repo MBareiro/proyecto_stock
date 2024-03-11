@@ -8,7 +8,7 @@ import { PeriodicElement } from '../ingresos/ingresos.component';
 @Component({
   selector: 'app-salidas',
   templateUrl: './salidas.component.html',
-  styleUrls: ['./salidas.component.css']
+  styleUrls: ['./salidas.component.css'],
 })
 export class SalidasComponent {
   productos: any[] = [];
@@ -291,19 +291,24 @@ export class SalidasComponent {
         }));
 
         // Call the saveSalidaDetalle method from the IngresosService to save the details
-        this.salidasService.saveSalidaDetalle(entradaResponse.id, detallesData).subscribe(
-          (detallesResponse) => {
-            console.log('Salida Detalle saved successfully:', detallesResponse);
-            this.snackBar.open('Operación completada con éxito.', 'Cerrar', {
-              duration: 3000
-            });
-            // Reset the form or perform any other necessary actions after saving
-            this.limpiarTabla();
-          },
-          (error) => {
-            console.error('Error saving Salida Detalle:', error);
-          }
-        );
+        this.salidasService
+          .saveSalidaDetalle(entradaResponse.id, detallesData)
+          .subscribe(
+            (detallesResponse) => {
+              console.log(
+                'Salida Detalle saved successfully:',
+                detallesResponse
+              );
+              this.snackBar.open('Operación completada con éxito.', 'Cerrar', {
+                duration: 3000,
+              });
+              // Reset the form or perform any other necessary actions after saving
+              this.limpiarTabla();
+            },
+            (error) => {
+              console.error('Error saving Salida Detalle:', error);
+            }
+          );
         this.limpiarProveedor();
       },
       (error) => {
@@ -330,12 +335,12 @@ export class SalidasComponent {
       const productoExistente = this.dataSource.find(
         (item) => item.cod_product === this.selectedProduct
       );
-  
+
       // Verifica si el producto ya está en la lista
       if (productoExistente) {
         // Muestra un mensaje de error indicando que el producto ya está en la lista
         this.mostrarSnackbar('Este producto ya está en la lista.', [
-          'error-snackbar'
+          'error-snackbar',
         ]);
         return; // Sale del método sin agregar el producto a la lista
       }
@@ -343,7 +348,7 @@ export class SalidasComponent {
       const productoSeleccionado = this.productos.find(
         (producto) => producto.id === parseInt(this.selectedProduct, 10)
       );
-        
+
       // Verifica si se encontró el producto seleccionado
       if (productoSeleccionado) {
         // Verifica si hay suficiente stock disponible
@@ -356,13 +361,13 @@ export class SalidasComponent {
             cantidad: this.cantidadInput,
             reserva: productoSeleccionado.reserva,
           };
-  
+
           // Agrega el nuevo elemento a la lista
           this.dataSource.push(nuevoElemento);
-  
+
           // Limpia los campos después de agregar el producto a la lista
           this.limpiarCampos();
-  
+
           // Muestra un mensaje de éxito
           this.mostrarSnackbar('Producto agregado a la lista.', [
             'success-snackbar',
@@ -370,7 +375,9 @@ export class SalidasComponent {
         } else {
           // Muestra un mensaje de error si no hay suficiente stock disponible
           this.mostrarSnackbar(
-            'No hay suficiente stock disponible para este producto. Disponible: ' + productoSeleccionado.cantidad + ' ',
+            'No hay suficiente stock disponible para este producto. Disponible: ' +
+              productoSeleccionado.cantidad +
+              ' ',
             ['error-snackbar']
           );
         }
@@ -384,10 +391,10 @@ export class SalidasComponent {
     }
   }
   // Método para validar el evento change del input de cantidad
-validarCantidad() {
-  // Verifica si el valor ingresado es negativo y lo establece como cero si es así
-  if (this.cantidadInput !== null && this.cantidadInput < 0) {
-    this.cantidadInput = 0;
+  validarCantidad() {
+    // Verifica si el valor ingresado es negativo y lo establece como cero si es así
+    if (this.cantidadInput !== null && this.cantidadInput < 0) {
+      this.cantidadInput = 0;
+    }
   }
-}
 }
