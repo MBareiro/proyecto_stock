@@ -4,7 +4,7 @@
       <button mat-mini-fab color="primary" matTooltip="Crear Carpeta" (click)="openNewFolderDialog()" *ngIf="!selectedCategoryId">
         <mat-icon>folder</mat-icon>
       </button>
-      <button mat-mini-fab color="primary" matTooltip="Crear Producto" (click)="openNewProductDialog()">
+      <button mat-mini-fab color="primary" matTooltip="Crear Producto" (click)="openNewProductDialog()" *ngIf="!selectedCategoryId">
         <mat-icon>note</mat-icon>
       </button>
       <button mat-mini-fab color="primary" matTooltip="Volver atras" (click)="goBack()" *ngIf="selectedCategoryId">
@@ -19,19 +19,19 @@
   </mat-card-actions>
 
   <mat-list *ngIf="!selectedCategoryId">
-    <!-- <div mat-subheader>Listado de Categorías</div> -->
-    <mat-list-item *ngFor="let categoria of categories" (click)="loadProductsByCategory(categoria.id)">
-      <mat-icon matListItemIcon>folder</mat-icon>
-      <div matListItemTitle>{{categoria.nombre}}</div>
-      <div matListItemMeta>
-        <button mat-icon-button color="primary" (click)="editCategory($event, categoria)">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button color="primary" (click)="deleteCategory($event, categoria)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
-    </mat-list-item>
+<mat-list-item *ngFor="let categoria of categories" [ngClass]="{ 'orange-text': categoryHasProductsInReserve(categoria.id) }" (click)="loadProductsByCategory(categoria.id)">
+  <mat-icon matListItemIcon>folder</mat-icon>
+  <div matListItemTitle>{{categoria.nombre}}</div>
+  <div matListItemMeta>
+    <button mat-icon-button color="primary" (click)="editCategory($event, categoria)">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" (click)="deleteCategory($event, categoria)">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+</mat-list-item>
+
   </mat-list>
   
   <!-- Lista de productos -->

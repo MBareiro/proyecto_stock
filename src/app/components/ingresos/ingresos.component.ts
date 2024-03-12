@@ -395,7 +395,7 @@ export class IngresosComponent {
 
         // Limpia los campos después de agregar el producto a la lista
         this.limpiarCampos();
-
+        
         // Muestra un mensaje de éxito
         this.mostrarSnackbar('Producto agregado a la lista.', [
           'success-snackbar',
@@ -429,6 +429,7 @@ export class IngresosComponent {
             this.loadProducts();
             // Establece el nuevo producto creado como seleccionado en el mat-select
             this.selectedProduct = resultado.id; // Suponiendo que el ID del producto es devuelto en la respuesta
+            this.isProductoSeleccionado = true;
           },
           (error) => {
             console.error('Error al agregar el producto', error);

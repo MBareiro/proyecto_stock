@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { catchError, map, Observable, of } from 'rxjs';
 import { Categoria } from 'src/app/models/category';
 import { Product } from 'src/app/models/product';
 import { CategoriaService } from 'src/app/services/categoria.service';
@@ -15,7 +16,7 @@ import { NewProductComponent } from '../dialogs/new-product/new-product.componen
 @Component({
   selector: 'app-inventory',
   templateUrl: './inventory.component.html',
-  styleUrls: ['./inventory.component.css']
+  styleUrls: ['./inventory.component.css'],
 })
 export class InventoryComponent implements OnInit {
   products: Product[] = [];
@@ -29,7 +30,7 @@ export class InventoryComponent implements OnInit {
     private dialog: MatDialog,
     private categoryService: CategoriaService,
     private snackBar: MatSnackBar
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts();
@@ -37,54 +38,75 @@ export class InventoryComponent implements OnInit {
     this.checkProductsInReserve();
   }
 
-  checkProductsInReserve(): void {    
+  checkProductsInReserve(): void {
     this.productService.getProducts().subscribe(
-      (response: Product[]) => {  
-        const productsInReserve = response.filter(product => +product.cantidad <= +product.reserva && +product.reserva !== 0);
+      (response: Product[]) => {
+        const productsInReserve = response.filter(
+          (product) =>
+            +product.cantidad <= +product.reserva && +product.reserva !== 0
+        );
         if (productsInReserve.length > 0) {
           this.snackBar.open('¡Hay productos en reserva!', 'Cerrar', {
-            duration: 5000
+            duration: 5000,
           });
-        }  
+        }
       },
       (error) => {
         console.error('Error fetching products:', error);
       }
     );
-    
   }
   loadProducts(): void {
-    if (this.selectedCategoryId === null) {      
+    if (this.selectedCategoryId === null) {
       this.productService.getProducts().subscribe(
-        (response: Product[]) => {  
+        (response: Product[]) => {
           console.log(response);
-          
-          this.products = response.filter(product => product.id_categoria === 0);
+
+          this.products = response.filter(
+            (product) => product.id_categoria === 0
+          );
           this.filteredProducts = this.products; // Inicializa la lista de productos filtrados
           console.log(this.products);
-          
-          this.loadCategories();   
+
+          this.loadCategories();
         },
         (error) => {
           console.error('Error fetching products:', error);
         }
       );
     } else {
-      this.productService.getProductsByCategory(this.selectedCategoryId).subscribe(
-        (response: Product[]) => {
-          this.products = response;
-          this.filteredProducts = this.products; // Inicializa la lista de productos filtrados
-        },
-        (error) => {
-          console.error('Error fetching products:', error);
-        }
-      );
+      this.productService
+        .getProductsByCategory(this.selectedCategoryId)
+        .subscribe(
+          (response: Product[]) => {
+            this.products = response;
+            this.filteredProducts = this.products; // Inicializa la lista de productos filtrados
+          },
+          (error) => {
+            console.error('Error fetching products:', error);
+          }
+        );
     }
   }
 
+// Método para verificar si algún producto en reserva pertenece a una categoría específica
+categoryHasProductsInReserve(categoryId: number): Observable<boolean> {
+  return this.productService.getProducts().pipe(
+    map((response: Product[]) => {
+      const productsInCategory = response.filter(product => product.id_categoria === categoryId);
+      return productsInCategory.some(product => +product.reserva >= +product.cantidad && +product.reserva !== 0);
+    }),
+    catchError((error) => {
+      console.error('Error fetching products:', error);
+      return of(false); // Manejo de errores, devuelve falso si hay un error
+    })
+  );
+}
+
+
   loadCategories(): void {
     this.categoryService.getCategorias().subscribe(
-      (response: Categoria[]) => {     
+      (response: Categoria[]) => {
         this.categories = response;
       },
       (error) => {
@@ -96,7 +118,7 @@ export class InventoryComponent implements OnInit {
   openNewProductDialog(): void {
     const dialogRef = this.dialog.open(NewProductComponent, {
       width: '260px',
-      data: {}
+      data: {},
     });
 
     dialogRef.afterClosed().subscribe((nuevoProducto) => {
@@ -105,7 +127,7 @@ export class InventoryComponent implements OnInit {
           (resultado) => {
             console.log('Producto agregado correctamente', resultado);
             this.snackBar.open('Producto agregado correctamente', 'Cerrar', {
-              duration: 3000
+              duration: 3000,
             });
             this.loadProducts();
           },
@@ -120,7 +142,7 @@ export class InventoryComponent implements OnInit {
   openNewFolderDialog(): void {
     const dialogRef = this.dialog.open(NewFolderComponent, {
       width: '260px',
-      data: {}
+      data: {},
     });
 
     dialogRef.afterClosed().subscribe((nuevoFolder) => {
@@ -151,7 +173,7 @@ export class InventoryComponent implements OnInit {
   editProduct(product: Product): void {
     const dialogRef = this.dialog.open(EditProductDialogComponent, {
       width: '260px',
-      data: {...product}
+      data: { ...product },
     });
 
     dialogRef.afterClosed().subscribe((result: Product | undefined) => {
@@ -160,7 +182,7 @@ export class InventoryComponent implements OnInit {
           (resultado) => {
             console.log('Producto actualizado correctamente', resultado);
             this.snackBar.open('Producto actualizado correctamente', 'Cerrar', {
-              duration: 3000
+              duration: 3000,
             });
             this.loadProducts();
           },
@@ -176,17 +198,21 @@ export class InventoryComponent implements OnInit {
     event.stopPropagation();
     const dialogRef = this.dialog.open(EditCategoryDialogComponent, {
       width: '260px',
-      data: {...categoria}
+      data: { ...categoria },
     });
-  
+
     dialogRef.afterClosed().subscribe((result: Categoria | undefined) => {
       if (result) {
         this.categoryService.actualizarCategoria(result).subscribe(
           (resultado) => {
             console.log('Categoria actualizada correctamente', resultado);
-            this.snackBar.open('Categoria actualizada correctamente', 'Cerrar', {
-              duration: 3000
-            });
+            this.snackBar.open(
+              'Categoria actualizada correctamente',
+              'Cerrar',
+              {
+                duration: 3000,
+              }
+            );
             this.loadCategories();
           },
           (error) => {
@@ -201,18 +227,18 @@ export class InventoryComponent implements OnInit {
     event.stopPropagation();
     const dialogRef = this.dialog.open(DeleteCategoryDialogComponent, {
       width: '260px',
-      data: {...categoria}
+      data: { ...categoria },
     });
-  
+
     dialogRef.afterClosed().subscribe((confirmacion: boolean) => {
       console.log(confirmacion);
-      
+
       if (confirmacion) {
         this.categoryService.eliminarCategoria(categoria.id).subscribe(
           (resultado) => {
             console.log('Categoria eliminada.', resultado);
             this.snackBar.open('Categoria eliminada correctamente', 'Cerrar', {
-              duration: 3000
+              duration: 3000,
             });
             this.loadCategories();
           },
@@ -228,16 +254,16 @@ export class InventoryComponent implements OnInit {
     event.stopPropagation();
     const dialogRef = this.dialog.open(DeleteProductDialogComponent, {
       width: '260px',
-      data: {}
+      data: {},
     });
-  
-    dialogRef.afterClosed().subscribe((confirmacion: boolean) => {      
+
+    dialogRef.afterClosed().subscribe((confirmacion: boolean) => {
       if (confirmacion) {
         this.productService.deleteProduct(product.id).subscribe(
           (resultado) => {
             console.log('Producto eliminada.', resultado);
             this.snackBar.open('Producto eliminado correctamente', 'Cerrar', {
-              duration: 3000
+              duration: 3000,
             });
             this.loadProducts();
           },
@@ -256,7 +282,7 @@ export class InventoryComponent implements OnInit {
       this.filteredProducts = this.products;
     } else {
       // Filtrar productos por nombre
-      this.filteredProducts = this.products.filter(product =>
+      this.filteredProducts = this.products.filter((product) =>
         product.nombre.toLowerCase().includes(this.searchText.toLowerCase())
       );
     }
