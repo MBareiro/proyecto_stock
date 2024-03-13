@@ -66,7 +66,6 @@ export class InventoryComponent implements OnInit {
             (product) => product.id_categoria === 0
           );
           this.filteredProducts = this.products; // Inicializa la lista de productos filtrados
-          console.log(this.products);
 
           this.loadCategories();
         },
@@ -89,24 +88,12 @@ export class InventoryComponent implements OnInit {
     }
   }
 
-// Método para verificar si algún producto en reserva pertenece a una categoría específica
-categoryHasProductsInReserve(categoryId: number): Observable<boolean> {
-  return this.productService.getProducts().pipe(
-    map((response: Product[]) => {
-      const productsInCategory = response.filter(product => product.id_categoria === categoryId);
-      return productsInCategory.some(product => +product.reserva >= +product.cantidad && +product.reserva !== 0);
-    }),
-    catchError((error) => {
-      console.error('Error fetching products:', error);
-      return of(false); // Manejo de errores, devuelve falso si hay un error
-    })
-  );
-}
-
 
   loadCategories(): void {
     this.categoryService.getCategorias().subscribe(
       (response: Categoria[]) => {
+        console.log(response);
+        
         this.categories = response;
       },
       (error) => {
@@ -167,6 +154,7 @@ categoryHasProductsInReserve(categoryId: number): Observable<boolean> {
 
   goBack(): void {
     this.selectedCategoryId = null;
+    this.filteredProducts = [];
     this.loadProducts();
   }
 

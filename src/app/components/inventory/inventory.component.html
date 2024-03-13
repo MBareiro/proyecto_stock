@@ -1,10 +1,12 @@
 <mat-card>
   <mat-card-actions>
     <div class="example-button-row">
-      <button mat-mini-fab color="primary" matTooltip="Crear Carpeta" (click)="openNewFolderDialog()" *ngIf="!selectedCategoryId">
+      <button mat-mini-fab color="primary" matTooltip="Crear Carpeta" (click)="openNewFolderDialog()"
+        *ngIf="!selectedCategoryId">
         <mat-icon>folder</mat-icon>
       </button>
-      <button mat-mini-fab color="primary" matTooltip="Crear Producto" (click)="openNewProductDialog()" *ngIf="!selectedCategoryId">
+      <button mat-mini-fab color="primary" matTooltip="Crear Producto" (click)="openNewProductDialog()"
+        *ngIf="!selectedCategoryId">
         <mat-icon>note</mat-icon>
       </button>
       <button mat-mini-fab color="primary" matTooltip="Volver atras" (click)="goBack()" *ngIf="selectedCategoryId">
@@ -13,34 +15,37 @@
       <!-- Campo de búsqueda por nombre -->
       <mat-form-field class="example-full-width" *ngIf="selectedCategoryId">
         <mat-label>Productos</mat-label>
-        <input matInput placeholder="Buscar por nombre" [(ngModel)]="searchText"  (keyup)="filterProducts()">
+        <input matInput placeholder="Buscar por nombre" [(ngModel)]="searchText" (keyup)="filterProducts()">
       </mat-form-field>
     </div>
   </mat-card-actions>
 
   <mat-list *ngIf="!selectedCategoryId">
-<mat-list-item *ngFor="let categoria of categories" [ngClass]="{ 'orange-text': categoryHasProductsInReserve(categoria.id) }" (click)="loadProductsByCategory(categoria.id)">
-  <mat-icon matListItemIcon>folder</mat-icon>
-  <div matListItemTitle>{{categoria.nombre}}</div>
-  <div matListItemMeta>
-    <button mat-icon-button color="primary" (click)="editCategory($event, categoria)">
-      <mat-icon>edit</mat-icon>
-    </button>
-    <button mat-icon-button color="primary" (click)="deleteCategory($event, categoria)">
-      <mat-icon>delete</mat-icon>
-    </button>
-  </div>
-</mat-list-item>
-
+    <mat-list-item *ngFor="let categoria of categories"
+      [ngClass]="{ 'orange-text': categoria.tiene_productos_en_reserva }" 
+      (click)="loadProductsByCategory(categoria.id)">
+      <mat-icon matListItemIcon>folder</mat-icon>
+      <div matListItemTitle>{{categoria.nombre}}</div>
+      <div matListItemMeta>
+        <button mat-icon-button color="primary" (click)="editCategory($event, categoria)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" (click)="deleteCategory($event, categoria)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </mat-list-item>
   </mat-list>
   
+
   <!-- Lista de productos -->
-  <mat-list>   
+  <mat-list>
     <!-- Listado de productos filtrados -->
-    <mat-list-item *ngFor="let product of filteredProducts" [ngClass]="{'orange-text': +product.reserva >= +product.cantidad && +product.reserva !== 0}">
+    <mat-list-item *ngFor="let product of filteredProducts"
+      [ngClass]="{'orange-text': +product.reserva >= +product.cantidad && +product.reserva !== 0}">
       <mat-icon matListItemIcon>note</mat-icon>
       <div matListItemTitle>{{product.nombre}}</div>
-      <div matListItemLine >
+      <div matListItemLine>
         Cantidad: {{product.cantidad}} Reserva: {{product.reserva}}
       </div>
       <div matListItemMeta>
