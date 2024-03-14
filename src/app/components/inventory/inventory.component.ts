@@ -232,6 +232,9 @@ export class InventoryComponent implements OnInit {
           },
           (error) => {
             console.error('Error al eliminar la categoría', error);
+            this.snackBar.open(error.error.message, 'Cerrar', {
+              duration: 3000,
+            });
           }
         );
       }
