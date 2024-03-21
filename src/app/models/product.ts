@@ -3,7 +3,7 @@ export interface Product {
     nombre: string;
     cantidad: number;
     reserva: number;
-    precio_compra: number;
+    precio_venta: number;
     medida: number;
     id_categoria: number;
   }

@@ -3,7 +3,15 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { IngresoService } from 'src/app/services/ingreso.service';
 import { ProductService } from 'src/app/services/product.service';
 import { SalidaService } from 'src/app/services/salida.service';
-import { PeriodicElement } from '../ingresos/ingresos.component';
+
+export interface PeriodicElement {
+  position: number;
+  cod_product: string;
+  nombre: string;
+  cantidad: number;
+  reserva: number;
+  precio_venta: number; // Agrega la propiedad precioVentaInput al tipo PeriodicElement
+}
 
 @Component({
   selector: 'app-salidas',
@@ -19,11 +27,11 @@ export class SalidasComponent {
   isProveedorSeleccionado: boolean = false;
   isPrecioCompraValido: boolean = false;
 
-  precioCompraInput: number | null = null;
   precioVentaInput: number | null = null;
   cantidadInput: number | null = null;
   reservaInput: number | null = null;
   total: number = 0;
+  precioHint: any;
 
   displayedColumns: string[] = [
     'Nombre',
@@ -48,7 +56,6 @@ export class SalidasComponent {
     // Inicializa los campos con null
     this.cantidadInput = null;
     this.reservaInput = null;
-    this.precioCompraInput = null;
     this.precioVentaInput = null;
 
     // Carga la lista de productos
@@ -73,6 +80,7 @@ export class SalidasComponent {
       // Establece el valor de reserva del producto seleccionado en el input de reserva
       if (selectedProduct) {
         this.reservaInput = selectedProduct.reserva;
+        this.precioHint = selectedProduct.precio_venta;
       } else {
         // En caso de que no se encuentre el producto seleccionado, establece el input de reserva en null
         this.reservaInput = null;
@@ -119,6 +127,14 @@ export class SalidasComponent {
       }
     }
   }
+  // En tu componente
+calcularTotal(): number {
+  let total = 0;
+  this.dataSource.forEach(item => {
+    total += item.precio_venta * item.cantidad;
+  });
+  return total;
+}
 
   /* ReservaValidacion() {
     // Verifica si el valor de reserva es un número válido y mayor o igual a 0
@@ -159,11 +175,9 @@ export class SalidasComponent {
     /* this.ReservaValidacion(); */
     // Validación de campos
     if (
-      this.precioCompraInput === null ||
       this.precioVentaInput === null ||
       this.reservaInput === null ||
       this.cantidadInput === null ||
-      this.precioCompraInput <= 0 ||
       this.precioVentaInput <= 0 ||
       this.reservaInput < 0 ||
       this.cantidadInput < 0
@@ -204,6 +218,7 @@ export class SalidasComponent {
       nombre: producto.nombre,
       cantidad: cantidad,
       reserva: reserva,
+      precio_venta: producto.precio_venta
     };
 
     // Añade la nueva fila al principio de la tabla
@@ -240,7 +255,6 @@ export class SalidasComponent {
     // Restablece los valores de los campos a 0
     this.cantidadInput = null;
     this.reservaInput = null;
-    this.precioCompraInput = null;
     this.precioVentaInput = null;
     this.selectedProduct = null;
   }
@@ -360,6 +374,7 @@ export class SalidasComponent {
             nombre: productoSeleccionado.nombre,
             cantidad: this.cantidadInput,
             reserva: productoSeleccionado.reserva,
+            precio_venta: productoSeleccionado.precio_venta
           };
 
           // Agrega el nuevo elemento a la lista

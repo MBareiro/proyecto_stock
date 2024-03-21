@@ -43,10 +43,10 @@
     <!-- Listado de productos filtrados -->
     <mat-list-item *ngFor="let product of filteredProducts"
       [ngClass]="{'orange-text': +product.reserva >= +product.cantidad && +product.reserva !== 0}">
-      <mat-icon matListItemIcon>note</mat-icon>
+      <mat-icon matListItemIcon>cookie</mat-icon>
       <div matListItemTitle>{{product.nombre}}</div>
       <div matListItemLine>
-        Cantidad: {{product.cantidad}} Reserva: {{product.reserva}}
+        Precio: ${{product.precio_venta}}  |  Cantidad: {{product.cantidad}}  <!-- |  Reserva: {{product.reserva}}   -->
       </div>
       <div matListItemMeta>
         <button mat-icon-button color="primary" (click)="editProduct(product)">

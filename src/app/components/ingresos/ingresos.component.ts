@@ -16,7 +16,9 @@ export interface PeriodicElement {
   nombre: string;
   cantidad: number;
   reserva: number;
+  precio_venta: number; // Agrega la propiedad precioVentaInput al tipo PeriodicElement
 }
+
 
 @Component({
   selector: 'app-ingresos',
@@ -27,24 +29,22 @@ export class IngresosComponent {
   productos: any[] = [];
   proveedores: any[] = [];
   selectedProduct: any;
-  selectedProveedor: any;
   isProductoSeleccionado: boolean = false;
   isProveedorSeleccionado: boolean = false;
   isPrecioCompraValido: boolean = false;
 
-  precioCompraInput: number | null = null;
   precioVentaInput: number | null = null;
   cantidadInput: number | null = null;
   reservaInput: number | null = null;
   total: number = 0;
 
-  displayedColumns: string[] = [
+  /* displayedColumns: string[] = [
     'Nombre',
     'Cantidad',
     'Reserva',
     'Importe',
     'Eliminar',
-  ];
+  ]; */
   dataSource: PeriodicElement[] = [];
 
   constructor(
@@ -63,7 +63,6 @@ export class IngresosComponent {
     // Inicializa los campos con null
     this.cantidadInput = null;
     this.reservaInput = null;
-    this.precioCompraInput = null;
     this.precioVentaInput = null;
 
     this.loadProducts()
@@ -185,11 +184,9 @@ export class IngresosComponent {
     this.ReservaValidacion();
     // Validación de campos
     if (
-      this.precioCompraInput === null ||
       this.precioVentaInput === null ||
       this.reservaInput === null ||
       this.cantidadInput === null ||
-      this.precioCompraInput <= 0 ||
       this.precioVentaInput <= 0 ||
       this.reservaInput < 0 ||
       this.cantidadInput < 0
@@ -231,13 +228,14 @@ export class IngresosComponent {
     // Manejo de valores nulos
     const cantidad = this.cantidadInput !== null ? this.cantidadInput : 0;
     const reserva = this.reservaInput !== null ? this.reservaInput : 0;
-
+    const precio_venta = this.precioVentaInput !== null ? this.precioVentaInput : 0;
     const newRow: PeriodicElement = {
       position: this.dataSource.length + 1,
       cod_product: producto.id,
       nombre: producto.nombre,
       cantidad: cantidad,
       reserva: reserva,
+      precio_venta: producto.precio_venta,
     };
 
     // Añade la nueva fila al principio de la tabla
@@ -263,18 +261,14 @@ export class IngresosComponent {
     this.isProductoSeleccionado = false;
     // Restablece los valores de los campos a 0 antes de deshabilitarlos
     this.limpiarCampos();
-    this.limpiarProveedor();
   }
 
-  limpiarProveedor() {
-    this.selectedProveedor = null;
-  }
+ 
 
   limpiarCampos() {
     // Restablece los valores de los campos a 0
     this.cantidadInput = null;
     this.reservaInput = null;
-    this.precioCompraInput = null;
     this.precioVentaInput = null;
     this.selectedProduct = null;
   }
@@ -305,11 +299,12 @@ export class IngresosComponent {
       ]);
       return;
     }
-
+    console.log(this.total);
+    
+    
     // Create an array to hold the data to be saved for the main entry
     const entradaData = {
-      fecha: new Date(), // Adjust based on your requirements
-      id_proveedor: this.selectedProveedor,
+      fecha: new Date(), // Adjust based on your requirements      
       importe_total: this.total,
     };
 
@@ -322,6 +317,7 @@ export class IngresosComponent {
         const detallesData: any[] = this.dataSource.map((element) => ({
           id_producto: element.cod_product,
           cantidad: element.cantidad,
+          precio_venta: element.precio_venta,
         }));
 
         // Call the saveEntradaDetalle method from the IngresosService to save the details
@@ -338,7 +334,6 @@ export class IngresosComponent {
             console.error('Error saving Entrada Detalle:', error);
           }
         );
-        this.limpiarProveedor();
       },
       (error) => {
         console.error('Error saving Entrada:', error);
@@ -360,7 +355,7 @@ export class IngresosComponent {
 
   agregarProducto() {
     // Verifica si hay un producto seleccionado y una cantidad ingresada
-    if (this.selectedProduct && this.cantidadInput !== null) {
+    if (this.selectedProduct && this.cantidadInput !== null && this.precioVentaInput !== null) {
       const productoExistente = this.dataSource.find(
         (item) => item.cod_product === this.selectedProduct
       );
@@ -388,6 +383,7 @@ export class IngresosComponent {
           nombre: productoSeleccionado.nombre,
           cantidad: this.cantidadInput,
           reserva: productoSeleccionado.reserva,
+          precio_venta: this.precioVentaInput
         };
 
         // Agrega el nuevo elemento a la lista
@@ -439,4 +435,21 @@ export class IngresosComponent {
     });
   }
   
+  PrecioVentaValidacion() {
+    // Verifica si el valor de precioVenta es un número válido y mayor a 0
+    if (this.precioVentaInput !== null && typeof this.precioVentaInput === 'number' && isFinite(this.precioVentaInput) && this.precioVentaInput > 0) {
+      // Valor válido, remueve la clase is-invalid
+      this.renderer.removeClass(document.getElementById('precio_venta'), 'is-invalid');
+    } else {
+      // Valor no válido, agrega la clase is-invalid
+      this.renderer.addClass(document.getElementById('precio_venta'), 'is-invalid');
+      if (this.precioVentaInput === null) {
+        this.mostrarSnackbar('Debe completar el campo Precio Venta', ['error-snackbar']);
+      } else if (this.precioVentaInput <= 0) {
+        this.mostrarSnackbar('El valor en el campo Precio Venta debe ser mayor a 0', ['error-snackbar']);
+      } else {
+        this.mostrarSnackbar('No se pueden ingresar valores negativos en el campo Precio Venta', ['error-snackbar']);
+      }
+    }
+  }
 }

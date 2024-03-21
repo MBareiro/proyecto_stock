@@ -14,7 +14,8 @@
                             {{ producto.nombre }}
                         </mat-option>
                     </mat-select>
-                    <button mat-icon-button matSuffix color="primary" matTooltip="Crear producto" (click)="openNewProductDialog($event)">
+                    <button mat-icon-button matSuffix color="primary" matTooltip="Crear producto"
+                        (click)="openNewProductDialog($event)">
                         <mat-icon>add</mat-icon>
                     </button>
                 </mat-form-field>
@@ -26,16 +27,22 @@
                         (change)="validarCantidad()">
                 </mat-form-field>
 
+                <mat-form-field class="field">                    
+                    <mat-label>Precio Venta</mat-label>
+                    <input matInput type="number" class="form-control" id="precio_venta" placeholder="" aria-label="Precio venta"
+                        aria-describedby="basic-addon1" [disabled]="!isProductoSeleccionado"
+                        [(ngModel)]="precioVentaInput" (keyup)="PrecioVentaValidacion()"
+                        (change)="PrecioVentaValidacion()" step="0.01">
+                    </mat-form-field>
                 <button mat-raised-button color="primary" (click)="agregarProducto()">Agregar Producto</button>
             </div>
 
             <mat-list>
                 <mat-list-item *ngFor="let item of dataSource">
-                    <mat-icon matListItemIcon>note</mat-icon>
+                    <mat-icon matListItemIcon>cookie</mat-icon>
                     <div matListItemTitle>{{ item.nombre }}</div>
-                    <div matListItemLine>Cantidad: {{ item.cantidad }}</div>
-                    <!-- <p matLine>Reserva: {{ item.reserva }}</p> -->
-                    <div matListItemMeta>
+                    <div matListItemLine>Cantidad: {{ item.cantidad }} |  Precio por unidad: {{ item.precio_venta | currency:'USD':'symbol':'1.2-2'}}</div>
+                  <div matListItemMeta>
                         <button mat-icon-button color="warn" (click)="eliminarRegistro(item.position)">
                             <mat-icon>delete</mat-icon>
                         </button>
