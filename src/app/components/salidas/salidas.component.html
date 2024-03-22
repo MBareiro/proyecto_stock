@@ -33,7 +33,7 @@
                     <mat-icon matListItemIcon>cookie</mat-icon>
                     <div matListItemTitle>{{ item.nombre }}</div>
                     <div matListItemLine>Cantidad: {{ item.cantidad }}</div>
-                    <div matListItemLine>Subtotal: ${{ item.precio_venta * item.cantidad | currency:'USD':'symbol':'1.2-2'}}</div>
+                    <div matListItemLine>Subtotal: {{ item.precio_venta * item.cantidad | currency:'USD':'symbol':'1.2-2'}}</div>
                     <div matListItemMeta>
                         <button mat-icon-button color="warn" (click)="eliminarRegistro(item.position)">
                             <mat-icon>delete</mat-icon>

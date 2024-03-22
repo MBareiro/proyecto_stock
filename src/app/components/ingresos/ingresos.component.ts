@@ -400,7 +400,7 @@ export class IngresosComponent {
     } else {
       // Muestra un mensaje de error si no se ha seleccionado un producto o no se ha ingresado una cantidad
       this.mostrarSnackbar(
-        'Por favor, seleccione un producto y especifique la cantidad.',
+        'Por favor, seleccione un producto, especifique la cantidad y precio.',
         ['error-snackbar']
       );
     }
