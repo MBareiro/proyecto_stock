@@ -1,8 +1,6 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport
-      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'over' : 'side'"
-      [opened]="(isHandset$ | async) === false">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       <!-- <a mat-list-item routerLink="/navigation/catalog">
@@ -23,22 +21,18 @@
       
       </mat-expansion-panel> -->
 
-      
-
       <a mat-list-item routerLink="/navigation/inventory">
-        <mat-icon class="vertical-align-middle icon-with-margin a" >inventory_2</mat-icon>
+        <mat-icon class="vertical-align-middle icon-with-margin a">inventory_2</mat-icon>
         <span class="vertical-align-middle">Inventario</span>
       </a>
 
-      
-
       <a mat-list-item routerLink="/navigation/income">
-        <mat-icon class="vertical-align-middle icon-with-margin a" >add_shopping_cart</mat-icon>
+        <mat-icon class="vertical-align-middle icon-with-margin a">add_shopping_cart</mat-icon>
         <span class="vertical-align-middle">Entradas</span>
       </a>
 
       <a mat-list-item routerLink="/navigation/outcome">
-        <mat-icon class="vertical-align-middle icon-with-margin a" >remove_shopping_cart</mat-icon>
+        <mat-icon class="vertical-align-middle icon-with-margin a">remove_shopping_cart</mat-icon>
         <span class="vertical-align-middle">Salidas</span>
       </a>
 
@@ -50,7 +44,7 @@
         <mat-icon class="vertical-align-middle icon-with-margin a" >group</mat-icon>
         <span class="vertical-align-middle">Usuarios</span>
       </a> -->
-      <a mat-list-item routerLink="/navigation/change-password">
+      <!-- <a mat-list-item routerLink="/navigation/change-password">
         <mat-icon class="vertical-align-middle icon-with-margin a" >lock</mat-icon>
         <span class="vertical-align-middle">Seguridad</span>
       </a>
@@ -58,42 +52,32 @@
         <mat-expansion-panel-header>
           <mat-icon class="vertical-align-middle icon-with-margin">group</mat-icon>
           <span class="vertical-align-middle">Usuarios</span>
-        </mat-expansion-panel-header>
-        <!-- Contenido adicional para el panel desplegable -->
+        </mat-expansion-panel-header>        
         <a mat-list-item routerLink="/navigation/user-create"><mat-icon class="vertical-align-middle icon-with-margin" *ngIf="userRole === 'admin'">add_circle</mat-icon>Crear </a>
-        <a mat-list-item routerLink="/navigation/user-list"><mat-icon class="vertical-align-middle icon-with-margin" *ngIf="userRole === 'admin'">list_alt</mat-icon>Listar</a>
-        <!-- Agrega más opciones según sea necesario -->
-      </mat-expansion-panel>
-      
-      
+        <a mat-list-item routerLink="/navigation/user-list"><mat-icon class="vertical-align-middle icon-with-margin" *ngIf="userRole === 'admin'">list_alt</mat-icon>Listar</a>        
+      </mat-expansion-panel> -->
+
       <!-- <a mat-list-item routerLink="/navigation/statistics">
         <mat-icon class="vertical-align-middle icon-with-margin">equalizer</mat-icon>
         <span class="vertical-align-middle">Estadisticas</span>
       </a> -->
     </mat-nav-list>
-    
-    
-    
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
-      <button
-        type="button"
-        aria-label="Toggle sidenav"
-        mat-icon-button
-        (click)="drawer.toggle()"
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       <div class="toolbar-title" fxFlex="auto">
-        <span class="truncate">Stocky</span>
+        <span class="truncate">Martin Bareiro - Fullstack Developer</span>
       </div>
-      <button mat-button class="button-right" aria-label="Button on the right" (click)="logout()">
+      <!-- <button mat-button class="button-right" aria-label="Button on the right" (click)="logout()">
         Salir
-        <mat-icon>logout</mat-icon> <!-- Icono de logout -->
-      </button>
+        <mat-icon>logout</mat-icon> 
+      </button> -->
     </mat-toolbar>
-    
+
     <!-- Add Content Here -->
     <router-outlet></router-outlet>
   </mat-sidenav-content>

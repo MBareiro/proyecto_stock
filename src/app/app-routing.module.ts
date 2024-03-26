@@ -14,7 +14,7 @@ import { UserListComponent } from './components/user/user-list/user-list.compone
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', redirectTo: '/navigation/inventory', pathMatch: 'full' },
   { path: 'navigation', component: NavigationComponent, children: [/* 
     { path: 'catalog', component: CatalogComponent },
     { path: 'user-management', component: UserCreateComponent },  
