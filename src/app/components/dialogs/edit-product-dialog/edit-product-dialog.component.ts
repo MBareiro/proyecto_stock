@@ -26,8 +26,8 @@ export class EditProductDialogComponent implements OnInit {
       cantidad: [data.cantidad, Validators.required],
       reserva: [data.reserva, Validators.required],/* 
       medida: [data.medida, Validators.required], */
-      id_categoria: [data.id_categoria, Validators.required],/* 
-      precio_venta: [data.precio_venta, Validators.required], */
+      id_categoria: [data.id_categoria, Validators.required],
+      precio_venta: [data.precio_venta, Validators.required], 
     });
   }
 
